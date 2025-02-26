@@ -1,13 +1,18 @@
 "use client";
 import Terminal from "@/components/Terminal";
 import Sidebar from "@/components/Sidebar";
+import { FaBars } from 'react-icons/fa';
 // import WinBox from "winbox"; 
 import * as winbox from "winbox";
+import { useState } from "react";
+import styles from './terminal/terminal.module.css';
 
-// Use it like this in your code
+
 const WinBox = winbox.WinBox || window.WinBox;
+
+
 export default function Home() {
-  
+  const [isSidebarOpen, setIsSidebarOpen]=useState(false);
   const handleCommand = (cmd: string) => {
     let title = '';
     let description = '';
@@ -52,7 +57,13 @@ export default function Home() {
   return (
     <div>
       <Terminal onCommand={handleCommand} />
+      {/* <button className={styles.mobileToggle}
+      onClick={()=>{setIsSidebarOpen(!isSidebarOpen); console.log('clicked')}}>
+        <FaBars/>
+      </button>
+      <div className={`${styles.sidebarWrapper} ${isSidebarOpen ? styles.open : ''}`}>
       <Sidebar onCommand={handleCommand} />
-    </div>
+      </div>*/}
+    </div> 
   );
 }

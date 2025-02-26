@@ -15,7 +15,7 @@ const Sidebar = ({ onCommand }: SidebarProps) => {
 
     return(
     <aside className={styles.sidebar}>
-        <h2>Options</h2>
+        <h2></h2>
         {options.map((item)=>(
             <button
             key={item.cmd}

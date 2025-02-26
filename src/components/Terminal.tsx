@@ -15,6 +15,18 @@ const Terminal=({onCommand}:terminalProps)=>{
     const xTermRef=useRef<XTerm | null>(null);
     let command='';
 
+    const availableCommands=[
+        'about',
+        'projects',
+        'skills',
+        'contact',
+        'welcome',
+        'clear',
+        'whoami',
+        'help'
+
+    ]
+
     useEffect(()=>{
         if (!terminalRef.current) return;
 
@@ -37,36 +49,66 @@ const Terminal=({onCommand}:terminalProps)=>{
         fitAddon.fit();
 
         // Initial prompt
+        function welcome(){
         term.writeln("Welcome to Poorvith's@Portfolio")
-        term.writeln('Type a command (e.g., "help" to know about all the commands) or click an option.');
-        term.write('poorvith@portfolio:~$ ');
+        term.writeln('Type a command (e.g., "help" to know about all the commands).');
+    }
+    function prompt(){
+        term.write('guest@portfolio:~$ ');
+        }
+        // Start of the terminal
+        welcome();
+        prompt();
+        
 
+        // TODO: handle the clear bug
         // Handle input
         term.onKey(({key,domEvent})=>{
             if (domEvent.key==='Enter'){
                 term.writeln('')
-                if (command.toLowerCase() === 'help') {
-                    term.writeln('about');
-                    term.writeln('projects');
-                    term.writeln('skills');
-                    term.writeln('contact');
+                if (command.trim().toLowerCase() === 'help') {
+                    term.writeln("All the available commands")
+                    availableCommands.forEach(cmd=>term.writeln(`- ${cmd}`))
+                  }else if(command.trim().toLowerCase()==='clear'){
+                    term.clear();
+                  }else if(command.trim().toLowerCase()==='welcome'){
+                        welcome();
                   }
                   else {
                     onCommand(command.trim().toLowerCase());
                   }
                 command='';
-                term.write('poorvith@portfolio:~$ ');
+                prompt();
             }else if (domEvent.key === 'Backspace'){
                 if (command.length>0){
                     command=command.slice(0,-1);
                     term.write('\b \b');
                 }
             }
+            else if(domEvent.key==='Tab'){
+                // domEvent.preventDefault();
+                handleTabCompletion();
+            }
             else if (key.match(/^[a-zA-Z0-9]$/)){
                 command+=key;
                 term.write(key);
             }
         })
+
+
+        function handleTabCompletion(){
+            const matches=availableCommands.filter(match=>match.startsWith(command));
+            if (matches.length===1){
+                const completion=matches[0].slice(command.length);
+                command=matches[0];
+                term.write(completion)
+            }else if (matches.length>1){
+                term.writeln('');
+                matches.forEach(match => term.writeln(match));
+                prompt();
+                term.write(command);
+            }
+        }
 
         return ()=>{
             term.dispose();
