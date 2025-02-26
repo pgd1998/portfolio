@@ -48,25 +48,77 @@ const Terminal=({onCommand}:terminalProps)=>{
         term.open(terminalRef.current);
         fitAddon.fit();
 
-        // Initial prompt
-        function welcome(){
-        term.writeln("Welcome to Poorvith's@Portfolio")
-        term.writeln('Type a command (e.g., "help" to know about all the commands).');
-    }
+
+        const asciiArt=
+`______                      _ _   _     
+| ___ \\                    (_) | | |    
+| |_/ /__   ___  _ ____   ___| |_| |__  
+|  __/ _ \\ / _ \\| '__\\ \\ / / | __| '_ \\ 
+| | | (_) | (_) | |   \\ V /| | |_| | | |
+\\_|  \\___/ \\___/|_|    \\_/ |_|\\__|_| |_|
+`;
+
+    // Function to type message character by character
+    function typeMessage(message: string,callback:()=>void) {
+        let index = 0;
+        function type() {
+          if (index < message.length) {
+            term.write(message[index]);
+            index++;
+            setTimeout(type, 50);
+          } else{
+            term.writeln('')
+            callback();
+          }
+        }
+        type();
+      }
+      // Function to display ASCII art properly
+      function displayAsciiArt(callback: () => void) {
+        // Split the ASCII art into lines
+        const lines = asciiArt.split('\n');
+        let lineIndex = 0;
+
+        function typeLine() {
+          if (lineIndex < lines.length) {
+            term.writeln(lines[lineIndex]);
+            lineIndex++;
+            setTimeout(typeLine, 100); 
+          } else {
+            callback();
+          }
+        }
+        typeLine();
+      }
+            // Initial prompt
+        function welcome() {
+            // Display ASCII art with proper alignment
+            typeMessage("Welcome to Poorvith's Portfolio\n", () => {
+              displayAsciiArt(() => {
+                term.writeln(''); // Add an empty line for spacing
+                typeMessage("Type a command (e.g., 'help' to know about all the commands).\n", prompt);
+              });
+            });
+          }
+  
     function prompt(){
         term.write('guest@portfolio:~$ ');
         }
+        
         // Start of the terminal
         welcome();
-        prompt();
         
 
         // TODO: handle the clear bug
+
         // Handle input
         term.onKey(({key,domEvent})=>{
             if (domEvent.key==='Enter'){
                 term.writeln('')
-                if (command.trim().toLowerCase() === 'help') {
+                if (!availableCommands.includes(command.trim().toLowerCase())){
+                  term.writeln("Invalid command. Try 'help' to see the available commands")
+                }
+                else if (command.trim().toLowerCase() === 'help') {
                     term.writeln("All the available commands")
                     availableCommands.forEach(cmd=>term.writeln(`- ${cmd}`))
                   }else if(command.trim().toLowerCase()==='clear'){

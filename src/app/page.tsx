@@ -45,11 +45,19 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       new WinBox({
         title,
-        html: `<div style="padding: 10px; color: #d3d3d3;">${description}</div>`,
+        html: `<div class="winbox-content">${description}</div>`,
         x: 'center',
         y: 'center',
-        width: '80%',
-        height: '80%',
+        width: '60%',
+        height: '60%',
+        border:0,
+        class: [ 'modern'],
+        onfocus: function () {
+          this.setBackground('#2a2a2a');
+        },
+        onblur: function () {
+          this.setBackground('#2a2a2a');
+        },
       });
     }
   };
