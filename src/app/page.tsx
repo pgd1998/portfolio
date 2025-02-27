@@ -20,9 +20,13 @@ export default function Home() {
     switch (cmd) {
       case 'about':
         title = 'About Me';
-        description = "I'm a Software Engineer with X years of experience...";
+        // There has to be some art before description
+        description = "Accomplished Software Engineer with a Master of Software Engineering degree from the University of Melbourne, possessing 2+ years of full-time experience designing, developing, testing, and maintaining enterprise web applications and software solutions for a globally recognised professional services firm serving diverse industries";
         break;
       
+        // Display all the projects in one winbox with name skills and small description 
+        // provide `View full` which opens a new window with full description and everything and 
+        // also an option to `View project`
       case 'projects':
         title = 'Projects';
         description = 'Project 1: Built with Next.js<br>Project 2: Built with TypeScript';

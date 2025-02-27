@@ -1,55 +1,55 @@
 "use client";
-import { useEffect,useRef } from 'react';
-import { Terminal as XTerm } from '@xterm/xterm';
-import { FitAddon } from '@xterm/addon-fit';
-import '@xterm/xterm/css/xterm.css';
-import styles from '../app/terminal/terminal.module.css';
+import { useEffect, useRef, useState } from "react";
+import { Terminal as XTerm } from "@xterm/xterm";
+import { FitAddon } from "@xterm/addon-fit";
+import "@xterm/xterm/css/xterm.css";
+import styles from "../app/terminal/terminal.module.css";
 
-interface terminalProps{
-    onCommand: (command: string) => void;
+interface terminalProps {
+  onCommand: (command: string) => void;
 }
 
+const Terminal = ({ onCommand }: terminalProps) => {
+  const terminalRef = useRef<HTMLDivElement>(null);
+  const xTermRef = useRef<XTerm | null>(null);
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
 
-const Terminal=({onCommand}:terminalProps)=>{
-    const terminalRef=useRef<HTMLDivElement>(null);
-    const xTermRef=useRef<XTerm | null>(null);
-    let command='';
+  let command = "";
 
-    const availableCommands=[
-        'about',
-        'projects',
-        'skills',
-        'contact',
-        'welcome',
-        'clear',
-        'whoami',
-        'help'
+  const availableCommands = [
+    "about",
+    "projects",
+    "skills",
+    "contact",
+    "welcome",
+    "clear",
+    "whoami",
+    "help",
+  ];
 
-    ]
+  useEffect(() => {
+    if (!terminalRef.current) return;
 
-    useEffect(()=>{
-        if (!terminalRef.current) return;
+    const term = new XTerm({
+      cursorBlink: true,
+      theme: {
+        background: "#1e1e1e",
+        foreground: "#d3d3d3",
+        cursor: "#00d4ff",
+      },
+    });
+    xTermRef.current = term;
 
-        const term=new XTerm({
-            cursorBlink: true,
-            theme: {
-              background: '#1e1e1e',
-              foreground: '#d3d3d3',
-              cursor: '#00d4ff',
-            },
-          });
-        xTermRef.current=term;
+    // Fit addon
+    const fitAddon = new FitAddon();
+    term.loadAddon(fitAddon);
 
-        // Fit addon
-        const fitAddon=new FitAddon();
-        term.loadAddon(fitAddon);
+    // Attach to DOM
+    term.open(terminalRef.current);
+    fitAddon.fit();
 
-        // Attach to DOM
-        term.open(terminalRef.current);
-        fitAddon.fit();
-
-
-        const asciiArt=
+    const asciiArt = 
 `______                      _ _   _     
 | ___ \\                    (_) | | |    
 | |_/ /__   ___  _ ____   ___| |_| |__  
@@ -59,115 +59,179 @@ const Terminal=({onCommand}:terminalProps)=>{
 `;
 
     // Function to type message character by character
-    function typeMessage(message: string,callback:()=>void) {
-        let index = 0;
-        function type() {
-          if (index < message.length) {
-            term.write(message[index]);
-            index++;
-            setTimeout(type, 50);
-          } else{
-            term.writeln('')
-            callback();
-          }
+    function typeMessage(message: string, callback: () => void) {
+      let index = 0;
+      function type() {
+        if (index < message.length) {
+          term.write(message[index]);
+          index++;
+          setTimeout(type, 50);
+        } else {
+          callback();
         }
-        type();
       }
-      // Function to display ASCII art properly
-      function displayAsciiArt(callback: () => void) {
-        // Split the ASCII art into lines
-        const lines = asciiArt.split('\n');
-        let lineIndex = 0;
+      type();
+    }
 
-        function typeLine() {
-          if (lineIndex < lines.length) {
-            term.writeln(lines[lineIndex]);
-            lineIndex++;
-            setTimeout(typeLine, 100); 
-          } else {
-            callback();
-          }
+    // Function to display ASCII art properly
+    function displayAsciiArt(callback: () => void) {
+      // Split the ASCII art into lines
+      const lines = asciiArt.split("\n");
+      let lineIndex = 0;
+
+      function typeLine() {
+        if (lineIndex < lines.length) {
+          term.writeln(lines[lineIndex]);
+          lineIndex++;
+          setTimeout(typeLine, 100);
+        } else {
+          callback();
         }
-        typeLine();
       }
-            // Initial prompt
-        function welcome() {
-            // Display ASCII art with proper alignment
-            typeMessage("Welcome to Poorvith's Portfolio\n", () => {
-              displayAsciiArt(() => {
-                term.writeln(''); // Add an empty line for spacing
-                typeMessage("Type a command (e.g., 'help' to know about all the commands).\n", prompt);
-              });
-            });
-          }
-  
-    function prompt(){
-        term.write('guest@portfolio:~$ ');
+      typeLine();
+    }
+
+    // Initial prompt
+    function welcome() {
+      // term.clear();
+      typeMessage("Welcome to Poorvith's Portfolio", () => {
+        term.writeln(''); // Add an empty line for spacing
+        displayAsciiArt(() => {
+          term.writeln(''); // Add an empty line for spacing
+          typeMessage("Type a command (e.g., 'help' to know about all the commands).", () => {
+            term.writeln(''); // Add an empty line for spacing
+            prompt();
+          });
+        });
+      });
+    }
+
+    function prompt() {
+      term.write("guest@portfolio:~$ ");
+    }
+
+    // Start of the terminal
+    welcome();
+
+    // Handle input
+    term.onKey(({ key, domEvent }) => {
+      if (domEvent.key === "Enter") {
+        term.writeln("");
+
+        if (command.trim()) {
+          // Add to history
+          setCommandHistory((prev) => [command, ...prev.slice(0, 9)]);
+          setHistoryIndex(-1);
         }
-        
-        // Start of the terminal
-        welcome();
-        
-
-        // TODO: handle the clear bug
-
-        // Handle input
-        term.onKey(({key,domEvent})=>{
-            if (domEvent.key==='Enter'){
-                term.writeln('')
-                if (!availableCommands.includes(command.trim().toLowerCase())){
-                  term.writeln("Invalid command. Try 'help' to see the available commands")
-                }
-                else if (command.trim().toLowerCase() === 'help') {
-                    term.writeln("All the available commands")
-                    availableCommands.forEach(cmd=>term.writeln(`- ${cmd}`))
-                  }else if(command.trim().toLowerCase()==='clear'){
-                    term.clear();
-                  }else if(command.trim().toLowerCase()==='welcome'){
-                        welcome();
-                  }
-                  else {
-                    onCommand(command.trim().toLowerCase());
-                  }
-                command='';
-                prompt();
-            }else if (domEvent.key === 'Backspace'){
-                if (command.length>0){
-                    command=command.slice(0,-1);
-                    term.write('\b \b');
-                }
-            }
-            else if(domEvent.key==='Tab'){
-                // domEvent.preventDefault();
-                handleTabCompletion();
-            }
-            else if (key.match(/^[a-zA-Z0-9]$/)){
-                command+=key;
-                term.write(key);
-            }
-        })
-
-
-        function handleTabCompletion(){
-            const matches=availableCommands.filter(match=>match.startsWith(command));
-            if (matches.length===1){
-                const completion=matches[0].slice(command.length);
-                command=matches[0];
-                term.write(completion)
-            }else if (matches.length>1){
-                term.writeln('');
-                matches.forEach(match => term.writeln(match));
-                prompt();
-                term.write(command);
-            }
+        if (!availableCommands.includes(command.trim().toLowerCase())) {
+          term.writeln(
+            "Invalid command. Try 'help' to see the available commands"
+          );
+        } else if (command.trim().toLowerCase() === "help") {
+          term.writeln("Available commands");
+          availableCommands.forEach((cmd) => term.writeln(`- ${cmd}`));
+        } else if (command.trim().toLowerCase() === "clear") {
+          term.clear();
+          prompt();
+        } else if (command.trim().toLowerCase() === "welcome") {
+          welcome();
+        } else {
+          onCommand(command.trim().toLowerCase());
         }
-
-        return ()=>{
-            term.dispose();
+        command = "";
+        prompt();
+      } else if (domEvent.key === "Backspace") {
+        if (command.length > 0) {
+          command = command.slice(0, -1);
+          term.write("\b \b");
         }
+      } else if (domEvent.key === "Tab") {
+        // domEvent.preventDefault();
+        handleTabCompletion();
+      } else if (domEvent.key === "ArrowUp") {
+        if (
+          commandHistory.length > 0 &&
+          historyIndex < commandHistory.length - 1
+        ) {
+          const newIndex = historyIndex + 1;
+          setHistoryIndex(newIndex);
 
-    },[])
-    return <div ref={terminalRef} className={styles.terminal} />;
-}
+          // Clear current command
+          term.write(
+            "\r" +
+            " ".repeat(
+              "guest@poorvith.portfolio:~$ ".length + command.length
+            ) +
+            "\r"
+          );
+          prompt();
+
+          // Write history command
+          const historyCommand = commandHistory[newIndex];
+          term.write(historyCommand);
+          command = historyCommand;
+        }
+      } else if (domEvent.key === "ArrowDown") {
+        if (historyIndex > 0) {
+          const newIndex = historyIndex - 1;
+          setHistoryIndex(newIndex);
+
+          // Clear current command
+          term.write(
+            "\r" +
+            " ".repeat(
+              "guest@poorvith.portfolio:~$ ".length + command.length
+            ) +
+            "\r"
+          );
+          prompt();
+
+          // Write history command
+          const historyCommand = commandHistory[newIndex];
+          term.write(historyCommand);
+          command = historyCommand;
+        } else if (historyIndex === 0) {
+          setHistoryIndex(-1);
+
+          // Clear current command
+          term.write(
+            "\r" +
+            " ".repeat(
+              "guest@poorvith.portfolio:~$ ".length + command.length
+            ) +
+            "\r"
+          );
+          prompt();
+          command = "";
+        }
+      } else if (key.match(/^[a-zA-Z0-9]$/)) {
+        command += key;
+        term.write(key);
+      }
+    });
+
+    function handleTabCompletion() {
+      const matches = availableCommands.filter((match) =>
+        match.startsWith(command)
+      );
+      if (matches.length === 1) {
+        const completion = matches[0].slice(command.length);
+        command = matches[0];
+        term.write(completion);
+      } else if (matches.length > 1) {
+        term.writeln("");
+        matches.forEach((match) => term.writeln(match));
+        prompt();
+        term.write(command);
+      }
+    }
+
+    return () => {
+      term.dispose();
+    };
+  }, [onCommand]);
+
+  return <div ref={terminalRef} className={styles.terminal} />;
+};
 
 export default Terminal;
