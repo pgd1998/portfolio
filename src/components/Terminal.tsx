@@ -26,6 +26,9 @@ const Terminal = ({ onCommand }: terminalProps) => {
     "clear",
     "whoami",
     "help",
+    "resume",
+    "education",
+    "experience"
   ];
 
   useEffect(() => {
@@ -65,7 +68,7 @@ const Terminal = ({ onCommand }: terminalProps) => {
         if (index < message.length) {
           term.write(message[index]);
           index++;
-          setTimeout(type, 50);
+          setTimeout(type, 30);
         } else {
           callback();
         }
@@ -93,17 +96,23 @@ const Terminal = ({ onCommand }: terminalProps) => {
 
     // Initial prompt
     function welcome() {
-      // term.clear();
-      typeMessage("Welcome to Poorvith's Portfolio", () => {
-        term.writeln(''); // Add an empty line for spacing
+      typeMessage("Hello! I'm Poorvith Gowda, a Software Engineer with 3+ years of experience building enterprise web applications", () => {
+        term.writeln(''); // Add spacing
         displayAsciiArt(() => {
-          term.writeln(''); // Add an empty line for spacing
-          typeMessage("Type a command (e.g., 'help' to know about all the commands).", () => {
-            term.writeln(''); // Add an empty line for spacing
-            prompt();
+          // term.writeln(''); // Add spacing
+          // typeMessage("Master's (Software Engineering) from University of Melbourne | React | Node.js | JavaScript | Python | Full-Stack Development", () => {
+            term.writeln('');
+            typeMessage("I am currently exploring full-time opportunities as a Software Engineer in Australia.", () => {
+              term.writeln('');
+              term.writeln('');
+              typeMessage("Type 'projects' to see my work, 'experience' for my background, or 'help' for all commands.", () => {
+                term.writeln('');
+                term.writeln('');
+                prompt();
+              });
+            });
           });
         });
-      });
     }
 
     function prompt() {
@@ -128,14 +137,17 @@ const Terminal = ({ onCommand }: terminalProps) => {
             "Invalid command. Try 'help' to see the available commands"
           );
         } else if (command.trim().toLowerCase() === "help") {
-          term.writeln("Available commands");
-          availableCommands.forEach((cmd) => term.writeln(`- ${cmd}`));
+          // term.writeln("Available commands");
+          availableCommands.forEach((cmd) => term.write(`  ○ ${cmd}`));
+          term.writeln('')
         } else if (command.trim().toLowerCase() === "clear") {
           term.clear();
-          prompt();
         } else if (command.trim().toLowerCase() === "welcome") {
           welcome();
-        } else {
+        } else if (command.trim().toLowerCase() === "whoami") {
+          term.writeln("guest user")
+        }  
+        else {
           onCommand(command.trim().toLowerCase());
         }
         command = "";
