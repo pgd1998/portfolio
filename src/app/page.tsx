@@ -138,6 +138,43 @@ export default function Home() {
     },
   ];
 
+  const experienceData = [
+    {
+      position: "Research Assistant (Software Developer)",
+      company: "University of Melbourne",
+      period: "2023 - Present",
+      skills: "Python | Flask | JavaScript | Tailwind CSS | Plotly Dash | REST API | Firebase | Nodemailer",
+      link:"Rephrame",
+      description: [
+        "Developed Rephrame, a software tool for building designers to assess embodied carbon, energy, and water, increasing assessment efficiency by 50%.",
+        "Created an intuitive UI with JavaScript/Tailwind and implemented interactive data visualizations with Plotly Dash.",
+        "Engineered a Python/Flask backend with optimized REST APIs and Firebase authentication."
+      ]
+    },
+    {
+      position: "Software Engineer",
+      company: "Accenture Solutions",
+      period: "2020 - 2022",
+      skills: "JavaScript | React | Node | Express | AWS | Tailwind | MongoDB | Gulp | Polyfills",
+      description: [
+        "Developed a Restaurant Booking Service frontend and led full-stack development of a Customer Care Software System.",
+        "Built complex UI features with React/Tailwind and implemented backend systems with Node.js/Express/MongoDB.",
+        "Ensured 99% cross-browser compatibility and deployed applications on AWS with CI/CD pipelines."
+      ]
+    },
+    {
+      position: "Application Developer Intern",
+      company: "InflaMed Pty Ltd",
+      period: "2023 - 2024",
+      skills: "TypeScript | React | Next.js | Firebase | Material UI | 100ms | Terraform",
+      description: [
+        "Designed a clinician-side web application with TypeScript/React/Next.js improving patient monitoring by 40%.",
+        "Implemented secure data management with Firestore/Realtime Database and integrated real-time communication using 100ms SDK.",
+        "Developed live transcription features for accurate capture of patient-clinician interactions."
+      ]
+    }
+  ];
+
   const handleCommand = (cmd: string) => {
     let title = "";
     let description = "";
@@ -196,12 +233,9 @@ export default function Home() {
             </div>
             <p class="project-description">${project.shortDescription}</p>
             <div class="project-actions">
-              <button onclick="viewFull('${
-                project.title
-              }')" class="view-full-btn">View Full</button>
-              <button onclick="viewProject('${
-                project.title
-              }')" class="view-project-btn">View Project</button>
+              <button onclick="window.viewFull('${project.title}')" class="view-full-btn">View Full</button>
+
+              <button onclick="window.viewProject('${project.title}')" class="view-project-btn">View Project</button>
             </div>
           </div>
         </div>
@@ -339,8 +373,6 @@ export default function Home() {
   `;
         break;
 
-      // TODO: You'll need to add your actual resume.pdf file to the public folder of your Next.js project
-
       case "resume":
         title = "Resume";
         description = `
@@ -366,85 +398,117 @@ export default function Home() {
       case "education":
         title = "Education";
         description = `
-    <div class="education-container">
-      ${educationData
-        .map(
-          (edu) => `
-        <div class="education-card">
-          <h3>${edu.degree}</h3>
-          <h4>${edu.university}</h4>
-          <p>${edu.location}</p>
-          <span class="education-period">${edu.period}</span>
-        </div>
-      `
-        )
-        .join("")}
-    </div>
-  `;
-        break;
+        <div class="education-container">
+          ${educationData
+            .map(
+              (edu) => `
+            <div class="education-card">
+              <h3>${edu.degree}</h3>
+              <h4>${edu.university}</h4>
+              <p>${edu.location}</p>
+              <span class="education-period">${edu.period}</span>
+            </div>
+          `
+            )
+            .join("")}
+        </div>`;
+            break;
 
         // TODO: add work experience
         case 'experience':
-          title="Work experience"
-          description="Work experience"
-          break;
+      title = "Work Experience";
+      description = `
+        <div class="experience-container">
+          ${experienceData.map(exp => `
+            <div class="experience-card">
+              <div class="experience-header">
+                <div>
+                  <h3>${exp.position}</h3>
+                  <h4>${exp.company}</h4>
+                  <span class="experience-period">${exp.period}</span>
+                  ${ exp.link && `<h4><a style="text-decoration: underline; color:rgb(74, 221, 138)" href="https://www.rephrame.com/" target="_blank">${exp.link}</a></h4>`}
+                </div>
+              </div>
+              
+              <div class="skills-section">
+                <h4>Skills:</h4>
+                <div class="skills-tags">
+                  ${exp.skills.split('|').map(skill => 
+                    `<span class="skill-tag">${skill.trim()}</span>`
+                  ).join('')}
+                </div>
+              </div>
+              
+              <div class="experience-description">
+                <ul>
+                  ${exp.description.map(item => 
+                    `<li>‣ ${item}</li>`
+                  ).join('')}
+                </ul>
+              </div>
+              
+            </div>
+          `).join('')}
+        </div>
+      `;
+      break;
       default:
         return "Unknown command";
     }
-    window.openCommand = (cmd) => {
-      handleCommand(cmd);
-    };
-    if (typeof window !== "undefined") {
-      window.viewFull = (title) => {
-        const project = projects.find((p) => p.title === title);
-        if (project) {
-          new WinBox({
-            title: `${project.title} - Full Description`,
-            html: `
-              <div class="winbox-content project-detail">
-                <div class="project-header">
-                  <img src="${project.imageUrl}" alt="${
-              project.title
-            }" class="project-detail-image" />
-                  <h2>${project.title}</h2>
-                </div>
-                <div class="skills-section">
-                  <h4>Technologies Used:</h4>
-                  <div class="skills-tags">
-                    ${project.skills
-                      .split("|")
-                      .map(
-                        (skill) =>
-                          `<span class="skill-tag">${skill.trim()}</span>`
-                      )
-                      .join("")}
-                  </div>
-                </div>
-                <div class="project-body">
-                  ${project.fullDescription}
-                </div>
+    
+    // Attach viewFull and viewProject functions to the window object
+window.openCommand = (cmd) => {
+  handleCommand(cmd);
+};
+if (typeof window !== "undefined") {
+  window.viewFull = (title) => {
+    const project = projects.find((p) => p.title === title);
+    if (project) {
+      new WinBox({
+        title: `${project.title} - Full Description`,
+        html: `
+          <div class="winbox-content project-detail">
+            <div class="project-header">
+              <img src="${project.imageUrl}" alt="${project.title}" class="project-detail-image" />
+              <h2>${project.title}</h2>
+            </div>
+            <div class="skills-section">
+              <h4>Technologies Used:</h4>
+              <div class="skills-tags">
+                ${project.skills
+                  .split("|")
+                  .map(
+                    (skill) =>
+                      `<span class="skill-tag">${skill.trim()}</span>`
+                  )
+                  .join("")}
               </div>
-            `,
-            x: "center",
-            y: "center",
-            width: "%",
-            height: "%",
-            border: 2,
-            class: ["modern"],
-            onfocus: function () {
-              this.setBackground("#2a2a2a");
-            },
-            onblur: function () {
-              this.setBackground("#2a2a2a");
-            },
-          });
-        }
-      };
+            </div>
+            <div class="project-body">
+              ${project.fullDescription}
+            </div>
+          </div>
+        `,
+        x: "center",
+        y: "center",
+        width: "60%",
+        height: "60%",
+        border: 2,
+        class: ["modern"],
+        onfocus: function () {
+          this.setBackground("#2a2a2a");
+        },
+        onblur: function () {
+          this.setBackground("#2a2a2a");
+        },
+      });
+    }
+  };
 
-      window.viewProject = (title) => {
-        // Implement the logic to view the project
-        alert(`Viewing project: ${title}`);
-      };
+  window.viewProject = (title) => {
+    // Implement the logic to view the project
+    alert(`Viewing project: ${title}`);
+  };
 
       new WinBox({
         title,
@@ -478,3 +542,4 @@ export default function Home() {
     </div>
   );
 }
+

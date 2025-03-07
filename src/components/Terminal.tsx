@@ -96,7 +96,7 @@ const Terminal = ({ onCommand }: terminalProps) => {
 
     // Initial prompt
     function welcome() {
-      typeMessage("Hello! I'm Poorvith Gowda, a Software Engineer with 3+ years of experience building enterprise web applications", () => {
+      typeMessage("Hello! I'm Poorvith Gowda, a Software Engineer with 2+ years of experience building enterprise web applications", () => {
         term.writeln(''); // Add spacing
         displayAsciiArt(() => {
           // term.writeln(''); // Add spacing
