@@ -1,0 +1,14 @@
+body {
+    background: linear-gradient(135deg, #1a2533, #2e3b4e);
+    font-family: 'JetBrains Mono', monospace;
+    color: #d3d3d3;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
