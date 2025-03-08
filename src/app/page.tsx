@@ -1,12 +1,15 @@
 "use client";
 import Terminal from "@/components/Terminal";
-import Sidebar from "@/components/Sidebar";
-import { FaBars } from "react-icons/fa";
-import * as winbox from "winbox";
+// import Sidebar from "@/components/Sidebar";
 import { useState } from "react";
-import styles from "./terminal/terminal.module.css";
 
-const WinBox = winbox.WinBox || window.WinBox;
+// Extend the Window interface to include viewFull
+declare global {
+  interface Window {
+    viewFull: (title: string) => void;
+    openCommand: (cmd: string) => void;
+  }
+}
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -467,7 +470,7 @@ if (typeof window !== "undefined") {
   window.viewFull = (title) => {
     const project = projects.find((p) => p.title === title);
     if (project) {
-      new WinBox({
+      new window.WinBox({
         title: `${project.title} - Full Description`,
         html: `
           <div class="winbox-content project-detail">
@@ -508,14 +511,14 @@ if (typeof window !== "undefined") {
     }
   };
 
-  window.viewProject = (title) => {
-    const project = projects.find((p) => p.title === title);
-    if (project){
+  // window.viewProject = (title) => {
+  //   const project = projects.find((p) => p.title === title);
+  //   if (project){
 
-    }
-  };
+  //   }
+  // };
 
-      new WinBox({
+      new window.WinBox({
         title,
         html: `<div class="winbox-content">${description}</div>`,
         x: "center",

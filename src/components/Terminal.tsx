@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Terminal as XTerm } from "@xterm/xterm";
-import { FitAddon } from "@xterm/addon-fit";
+// import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
 import styles from "../app/terminal/terminal.module.css";
 
@@ -45,11 +45,12 @@ const Terminal = ({ onCommand }: terminalProps) => {
     xTermRef.current = term;
 
     // Fit addon
+    import("@xterm/addon-fit").then(({ FitAddon }) => {
     const fitAddon = new FitAddon();
     term.loadAddon(fitAddon);
 
     // Attach to DOM
-    term.open(terminalRef.current);
+    term.open(terminalRef.current!);
     fitAddon.fit();
 
     const asciiArt = 
@@ -236,7 +237,15 @@ const Terminal = ({ onCommand }: terminalProps) => {
         prompt();
         term.write(command);
       }
-    }
+    }}).catch((err) => {
+      console.error("Failed to load FitAddon:", err);
+      // Fallback: Open terminal without FitAddon
+      term.open(terminalRef.current!);
+      term.writeln("Welcome to Poorvith Gowda's Portfolio (FitAddon failed)");
+      term.writeln('Type a command (e.g., "projects") or use the sidebar.');
+      term.write("user@portfolio:~$ ");
+    });
+
 
     return () => {
       term.dispose();

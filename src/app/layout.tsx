@@ -13,6 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script src="/winbox.bundle.min.js" defer></script>
+        <link rel="stylesheet" href="/winbox.css"/>
+      </head>
       <body>{children}</body>
     </html>
   );
