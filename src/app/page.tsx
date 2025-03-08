@@ -25,7 +25,8 @@ export default function Home() {
         <p>‣ In parallel, I assumed responsibility for establishing a robust CI/CD pipeline, utilizing Docker for seamless production-level deployment.</p>
         <p>‣ Furthermore, I harnessed PostgreSQL for efficient data storage, ensuring the system's stability and reliability, aligning with August Robotics' mission to deliver cutting-edge solutions to their clients.</p>
       `,
-      imageUrl: "/api/placeholder/400/250",
+      imageUrl: "/augustrobotics.png",
+      viewLink:"https://github.com/pgd1998/August-Robotics-UNIMELB"
     },
     {
       title: "Music Events System Project",
@@ -40,7 +41,8 @@ export default function Home() {
         <p>‣ Developed a set of RESTful APIs to handle user registration, login, event creation, ticket booking, and event modification. Implemented JWT-based authentication for securing the API endpoints.</p>
         <p>‣ The application was hosted on the cloud platform Render for scalability and reliability. I was also involved in setting up Continuous Integration and deployment (CI/CD) pipelines for automatic updates.</p>
       `,
-      imageUrl: "/api/placeholder/400/250",
+      imageUrl: "/musicevents.png",
+      viewLink:""
     },
     {
       title: "Resource Monitoring and Alerting System",
@@ -54,7 +56,8 @@ export default function Home() {
         <p>‣ Developed a suite of Bash scripts to monitor server resources, including CPU usage, memory consumption, disk space, and network activity. These scripts utilized Linux commands such as top, df, and netstat to gather real-time data.</p>
         <p>‣ The system's focus on proactive monitoring, automation, and detailed logging significantly enhanced the e-commerce platform's reliability, uptime, and performance by at least 35%.</p>
       `,
-      imageUrl: "/api/placeholder/400/250",
+      imageUrl: "/resourcemanagement.png",
+      viewLink:"https://github.com/pgd1998/Resource-Management"
     },
   ];
   const skillsData = {
@@ -97,12 +100,7 @@ export default function Home() {
   };
 
   const contactInfo = [
-    {
-      type: "Email",
-      value: "poorvithgowda10@gmail.com",
-      icon: "✉️",
-      action: "mailto:poorvithgowda10@gmail.com",
-    },
+    
     {
       type: "Phone",
       value: "04108760",
@@ -120,6 +118,12 @@ export default function Home() {
       value: "pgd1998",
       icon: "💻",
       action: "https://github.com/pgd1998",
+    },
+    {
+      type: "Email",
+      value: "poorvithgowda10@gmail.com",
+      icon: "✉️",
+      action: "mailto:poorvithgowda10@gmail.com",
     },
   ];
 
@@ -235,8 +239,7 @@ export default function Home() {
             <div class="project-actions">
               <button onclick="window.viewFull('${project.title}')" class="view-full-btn">View Full</button>
 
-              <button onclick="window.viewProject('${project.title}')" class="view-project-btn">View Project</button>
-            </div>
+<button onclick="window.open('${project.viewLink}', '_blank')" class="view-project-btn">View Project</button>            </div>
           </div>
         </div>
       `
@@ -506,8 +509,10 @@ if (typeof window !== "undefined") {
   };
 
   window.viewProject = (title) => {
-    // Implement the logic to view the project
-    alert(`Viewing project: ${title}`);
+    const project = projects.find((p) => p.title === title);
+    if (project){
+
+    }
   };
 
       new WinBox({
@@ -515,8 +520,8 @@ if (typeof window !== "undefined") {
         html: `<div class="winbox-content">${description}</div>`,
         x: "center",
         y: "center",
-        width: "60%",
-        height: "60%",
+        width: "50%",
+        height: "65%",
         border: 0,
         class: ["modern"],
         onfocus: function () {
