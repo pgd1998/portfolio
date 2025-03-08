@@ -1,7 +1,7 @@
 "use client";
 import Terminal from "@/components/Terminal";
 // import Sidebar from "@/components/Sidebar";
-import { useState } from "react";
+// import { useState } from "react";
 
 // Extend the Window interface to include viewFull
 declare global {
@@ -12,7 +12,7 @@ declare global {
 }
 
 export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const projects = [
     {
