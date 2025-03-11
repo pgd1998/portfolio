@@ -191,28 +191,68 @@ export default function Home() {
         title = "About Me";
         description = `
     <div class="about-container">
-      <div class="about-header">
-        <img src="/api/placeholder/150/150" alt="Poorvith Gowda" class="profile-image" />
-        <div class="about-title">
-          <h2>Poorvith Gowda</h2>
-          <h3>Software Engineer</h3>
-        </div>
+  <div class="about-header">
+    <h2 class="section-title">About Me</h2>
+  </div>
+  
+  <div class="about-content">
+    <div class="about-profile">
+      <div className="profile-image">
+        <div className="profile-avatar" style="background-image: url('/profile.jpg'); background-size: cover; background-position: center; width: 175px; height: 175px; border-radius: 50%;"></div>
+        <div className="profile-avatar"></div>
       </div>
-      
-      <div class="about-content">
-        <p>Accomplished Software Engineer with a Master of Software Engineering degree from the University of Melbourne, possessing 2+ years of full-time experience designing, developing, testing, and maintaining enterprise web applications and software solutions for a globally recognised professional services firm serving diverse industries.</p>
-        
-        <p>I specialize in full-stack development with expertise in TypeScript, React, Node.js, and cloud technologies. My passion lies in creating efficient, scalable, and user-friendly applications that solve real-world problems.</p>
-        
-        <p>When I'm not coding, I enjoy exploring new technologies, contributing to open-source projects, and continuously expanding my knowledge in the ever-evolving tech landscape.</p>
-        
-        <div class="about-cta">
-          <button onclick="window.openCommand('contact')" class="cta-btn">Contact Me</button>
-          <button onclick="window.openCommand('projects')" class="cta-btn secondary">View Projects</button>
+      <div class="profile-info">
+        <h1>Poorvith Gowda</h1>
+        <h3>Software Engineer</h3>
+        <div class="profile-tags">
+          <span class="profile-tag">Full-Stack Developer</span>
+          <span class="profile-tag">Problem Solver</span>
+          <span class="profile-tag">Tech Enthusiast</span>
         </div>
       </div>
     </div>
-  `;
+    
+    <div class="about-description">
+      <p>Accomplished Software Engineer with a Master of Software Engineering degree from the University of Melbourne, possessing 2+ years of full-time experience designing, developing, testing, and maintaining enterprise web applications and software solutions for a globally recognised professional services firm serving diverse industries.</p>
+      
+      <p>I specialize in full-stack development with expertise in TypeScript, React, Node.js, and cloud technologies. My passion lies in creating efficient, scalable, and user-friendly applications that solve real-world problems.</p>
+      
+      <p>When I'm not coding, I enjoy exploring new technologies, contributing to open-source projects, and continuously expanding my knowledge in the ever-evolving tech landscape.</p>
+    </div>
+    
+    <div class="about-highlights">
+      <div class="highlight-card">
+        <div class="highlight-icon">💻</div>
+        <div class="highlight-content">
+          <h4>Technical Expertise</h4>
+          <p>Full-stack development with modern frameworks and cloud technologies</p>
+        </div>
+      </div>
+      
+      <div class="highlight-card">
+        <div class="highlight-icon">🎓</div>
+        <div class="highlight-content">
+          <h4>Education</h4>
+          <p>Master of Software Engineering, University of Melbourne</p>
+        </div>
+      </div>
+      
+      <div class="highlight-card">
+        <div class="highlight-icon">⚡</div>
+        <div class="highlight-content">
+          <h4>Experience</h4>
+          <p>2+ years of enterprise application development</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="about-cta">
+      <button onclick="window.openCommand('contact')" class="cta-btn primary">Contact Me</button>
+      <button onclick="window.openCommand('projects')" class="cta-btn secondary">View Projects</button>
+      <button onclick="window.openCommand('resume')" class="cta-btn secondary">Resume</button>
+    </div>
+  </div>
+</div>`
         break;
 
       case "projects":
