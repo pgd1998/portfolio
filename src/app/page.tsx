@@ -472,7 +472,7 @@ export default function Home() {
                   <h3>${exp.position}</h3>
                   <h4>${exp.company}</h4>
                   <span class="experience-period">${exp.period}</span>
-                  ${ exp.link && `<h4><a style="text-decoration: underline; color:rgb(74, 221, 138)" href="https://www.rephrame.com/" target="_blank">${exp.link}</a></h4>`}
+                  ${exp.link ? `<h4><a style="text-decoration: underline; color:rgb(74, 221, 138)" href="${exp.link}" target="_blank">${exp.link}</a></h4>` : ''}
                 </div>
               </div>
               
